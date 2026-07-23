@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import * as React from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
@@ -131,7 +132,7 @@ function GalleryPage() {
               style={{
                 background: `linear-gradient(135deg, oklch(0.85 0.15 ${items[lightbox].hue}), oklch(0.7 0.18 ${(items[lightbox].hue + 60) % 360}))`,
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               <button
                 type="button"
