@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   return (
-    <SiteLayout>
+    <SiteLayout transparentHeader>
       <Hero />
       <FloatingDecor />
       <ServicesCarousel />

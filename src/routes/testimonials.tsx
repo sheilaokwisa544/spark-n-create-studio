@@ -40,7 +40,7 @@ const REVIEWS = [
 
 function Testimonials() {
   return (
-    <SiteLayout>
+    <SiteLayout transparentHeader>
       <section className="relative overflow-hidden bg-hero-wash pt-32 pb-16">
         <SplashBlob className="pointer-events-none absolute -right-10 top-10 h-72 w-72 opacity-40" color="var(--brand-turquoise)" />
         <SplashBlob className="pointer-events-none absolute -left-10 bottom-0 h-64 w-64 opacity-30" color="var(--brand-orange)" delay={0.3} />

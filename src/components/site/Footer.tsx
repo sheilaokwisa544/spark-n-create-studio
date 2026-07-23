@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Instagram, Facebook, Mail, Phone, MapPin, MessageCircle, Send, ArrowUpRight } from "lucide-react";
 import { toast } from "sonner";
 import logoAsset from "@/assets/choranami-logo.jpg.asset.json";
@@ -8,7 +8,7 @@ import { nav, site } from "@/lib/site";
 export function Footer() {
   const [email, setEmail] = useState("");
 
-  function onSubmit(e: React.FormEvent) {
+  function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!/.+@.+\..+/.test(email)) {
       toast.error("Please enter a valid email");
