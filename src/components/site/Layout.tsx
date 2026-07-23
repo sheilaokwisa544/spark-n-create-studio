@@ -3,13 +3,14 @@ import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { FloatingActions } from "./FloatingActions";
 
-export function SiteLayout({ children, transparentHeader = true }: { children: ReactNode; transparentHeader?: boolean }) {
+export function SiteLayout({ children, transparentHeader = false }: { children: ReactNode; transparentHeader?: boolean }) {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className={transparentHeader ? "flex-1" : "flex-1 pt-24"}>{children}</main>
+      <main className={transparentHeader ? "flex-1" : "flex-1 pt-20"}>{children}</main>
       <Footer />
       <FloatingActions />
     </div>
   );
 }
+
