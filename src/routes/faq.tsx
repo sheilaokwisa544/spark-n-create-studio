@@ -1,99 +1,129 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import { HelpCircle, ArrowRight, MessageCircle } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/Layout";
-import { SplashBlob } from "@/components/site/Splash";
+import { PageHero } from "@/components/site/PageHero";
+import { listFaqs } from "@/lib/data.functions";
+
+const faqsQuery = queryOptions({ queryKey: ["faqs"], queryFn: () => listFaqs() });
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
-      { title: "FAQ — ChoraNami Art Programs" },
+      { title: "FAQ — ChoraNami Art Program Questions Answered" },
       {
         name: "description",
         content:
-          "Answers to common questions about ChoraNami art clubs, homeschool lessons, ArTogether and Party Boom.",
+          "Answers to common questions about ChoraNami art clubs, homeschool lessons, ArTogether team experiences and Party Boom kids' events.",
       },
       { property: "og:title", content: "ChoraNami FAQ" },
-      {
-        property: "og:description",
-        content: "Everything you need to know before booking a ChoraNami program.",
-      },
+      { property: "og:description", content: "Everything you need to know before booking a ChoraNami program." },
     ],
     links: [{ rel: "canonical", href: "/faq" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [],
+        }),
+      },
+    ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(faqsQuery),
   component: FAQ,
+  errorComponent: ({ reset }) => (
+    <div className="p-10 text-center">
+      <p>Failed to load.</p>
+      <button onClick={reset} className="underline">Retry</button>
+    </div>
+  ),
+  notFoundComponent: () => <div className="p-10 text-center">Not found</div>,
 });
 
-const QA = [
-  {
-    q: "What ages do you cater to?",
-    a: "Our programs are designed for children aged 4–14, with age-appropriate lessons and materials for each group.",
-  },
-  {
-    q: "Do you provide materials?",
-    a: "Yes — all materials are included in every program. Children arrive ready to create.",
-  },
-  {
-    q: "Where do you operate?",
-    a: "We're based in Nairobi, Kenya and travel to schools, homes and event venues across the country by arrangement.",
-  },
-  {
-    q: "How long is a school term program?",
-    a: "Our school art clubs run for 10 lessons per school term, typically once a week.",
-  },
-  {
-    q: "What's the minimum for ArTogether?",
-    a: "ArTogether experiences require a minimum booking of 50 participants.",
-  },
-  {
-    q: "Can we book a birthday on short notice?",
-    a: "We recommend booking Party Boom at least two weeks in advance, but reach out — we'll try to make it work.",
-  },
-  {
-    q: "Do you offer payment plans?",
-    a: "For school clubs and long-term partnerships, we're happy to structure payments per term. Contact us for details.",
-  },
-];
-
 function FAQ() {
+  const { data: faqs } = useSuspenseQuery(faqsQuery);
+  const categories = useMemo(() => {
+    const set = new Set<string>(["All"]);
+    faqs.forEach((f) => set.add(f.category));
+    return Array.from(set);
+  }, [faqs]);
+  const [category, setCategory] = useState("All");
+  const visible = category === "All" ? faqs : faqs.filter((f) => f.category === category);
+
   return (
-    <SiteLayout>
-      <section className="relative overflow-hidden bg-hero-wash">
-        <SplashBlob
-          className="pointer-events-none absolute -left-10 top-10 h-72 w-72 opacity-40"
-          color="var(--brand-yellow)"
-        />
-        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <h1 className="font-display text-5xl font-black text-brand-brown sm:text-6xl">
-            Frequently <span className="text-gradient-splash">Asked</span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-foreground/75">
-            Can't find your question? Drop us a message.
-          </p>
+    <SiteLayout transparentHeader>
+      <PageHero
+        kicker="FAQ"
+        title={<><span className="text-gradient-splash">Frequently</span> asked</>}
+        subtitle="Can't find your question? Drop us a message — we reply within one business day."
+        accent="orange"
+      >
+        <div className="flex flex-wrap justify-center gap-2">
+          {categories.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setCategory(c)}
+              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+                category === c
+                  ? "bg-gradient-button text-white shadow-glow-orange"
+                  : "glass-card text-brand-brown/80 hover:text-brand-brown"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
         </div>
-      </section>
+      </PageHero>
 
       <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-        <Accordion type="single" collapsible className="space-y-3">
-          {QA.map((qa, i) => (
-            <AccordionItem
-              key={i}
-              value={`item-${i}`}
-              className="rounded-2xl border border-border bg-card px-5 shadow-card"
-            >
-              <AccordionTrigger className="text-left font-display text-lg font-bold text-brand-brown hover:no-underline">
-                {qa.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-foreground/75">
-                {qa.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <motion.div
+          key={category}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Accordion type="single" collapsible className="space-y-3">
+            {visible.map((qa) => (
+              <AccordionItem
+                key={qa.id}
+                value={qa.id}
+                className="glass-card overflow-hidden rounded-2xl border-none px-5 shadow-glass"
+              >
+                <AccordionTrigger className="text-left font-display text-lg font-bold text-brand-brown hover:no-underline">
+                  <span className="flex items-start gap-3">
+                    <span className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-button text-xs text-white">
+                      <HelpCircle className="h-3.5 w-3.5" />
+                    </span>
+                    <span>{qa.question}</span>
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="pl-9 text-brand-brown/75">
+                  {qa.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </motion.div>
+
+        <div className="mt-12 rounded-3xl bg-gradient-brown p-8 text-center text-white shadow-splash md:p-12">
+          <MessageCircle className="mx-auto h-10 w-10 text-brand-yellow" />
+          <h2 className="mt-3 font-display text-3xl font-black">Still have questions?</h2>
+          <p className="mt-2 text-white/80">We'd love to hear from you — we reply fast.</p>
+          <Link to="/contact" className="btn-pill mt-5 bg-gradient-button text-white shadow-glow-orange">
+            Talk to us <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </section>
     </SiteLayout>
   );
