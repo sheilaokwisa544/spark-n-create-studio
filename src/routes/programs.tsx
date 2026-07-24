@@ -95,7 +95,8 @@ function Programs() {
       <section className="mx-auto max-w-7xl space-y-24 px-4 py-16 sm:px-6 md:py-24">
         {PROGRAMS.map((p, i) => {
           const media = PROGRAM_MEDIA[p.slug];
-          const Icon = iconMap[p.Icon.displayName ?? "Palette"] ?? p.Icon;
+          const Icon = p.Icon;
+          void iconMap;
           return (
             <motion.article
               key={p.slug}
