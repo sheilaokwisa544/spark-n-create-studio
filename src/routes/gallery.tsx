@@ -1,86 +1,121 @@
 import { createFileRoute } from "@tanstack/react-router";
-import * as React from "react";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Camera } from "lucide-react";
+import Masonry from "react-masonry-css";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/Layout";
-import { SplashBlob } from "@/components/site/Splash";
+import { PageHero } from "@/components/site/PageHero";
+import { listGallery } from "@/lib/data.functions";
+import heroKids from "@/assets/hero-kids-painting.jpg";
+import heroParty from "@/assets/hero-party.jpg";
+import heroCanvas from "@/assets/hero-canvas-event.jpg";
+import heroStudent from "@/assets/hero-student-artwork.jpg";
+
+const galleryQuery = queryOptions({
+  queryKey: ["gallery"],
+  queryFn: () => listGallery(),
+});
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
-      { title: "Gallery — ChoraNami Art in Action" },
+      { title: "Gallery — ChoraNami Art in Action Across Kenya" },
       {
         name: "description",
         content:
-          "See ChoraNami in action: school art clubs, homeschool lessons, canvas painting, birthday parties and more.",
+          "See ChoraNami in action: school art clubs, homeschool lessons, canvas painting, birthday parties and children's artwork from across Kenya.",
       },
       { property: "og:title", content: "ChoraNami Gallery" },
       {
         property: "og:description",
         content: "Moments from our art clubs, homeschool lessons and events.",
       },
+      { property: "og:image", content: heroKids },
+      { name: "twitter:image", content: heroKids },
     ],
     links: [{ rel: "canonical", href: "/gallery" }],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(galleryQuery),
   component: GalleryPage,
+  errorComponent: ({ reset }) => (
+    <div className="p-10 text-center">
+      <p>Failed to load gallery.</p>
+      <button onClick={reset} className="underline">Retry</button>
+    </div>
+  ),
+  notFoundComponent: () => <div className="p-10 text-center">Not found</div>,
 });
 
-const CATEGORIES = [
-  "All",
-  "School Art Clubs",
-  "Homeschool Lessons",
-  "Canvas Painting",
-  "Birthday Parties",
-  "Tote Bag Painting",
-  "T-shirt Painting",
-  "Children's Artwork",
-] as const;
-
-// Placeholder gallery — Phase 2 will replace with data from the DB + Storage.
-const PLACEHOLDER = Array.from({ length: 12 }).map((_, i) => ({
-  id: i,
-  title: `Creative moment #${i + 1}`,
-  category: CATEGORIES[(i % (CATEGORIES.length - 1)) + 1],
-  hue: [40, 190, 300, 90, 20][i % 5],
-}));
+// Fallback gradient placeholders when DB is empty
+const PLACEHOLDER_IMAGES = [heroKids, heroParty, heroCanvas, heroStudent];
+const PLACEHOLDER_CATEGORIES = ["School Art Clubs", "Birthday Parties", "Canvas Painting", "Children's Artwork"];
 
 function GalleryPage() {
-  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
+  const { data: dbItems } = useSuspenseQuery(galleryQuery);
+
+  const items = useMemo(() => {
+    if (dbItems && dbItems.length > 0) return dbItems;
+    // Show a bright placeholder grid until admin uploads photos.
+    return Array.from({ length: 16 }).map((_, i) => ({
+      id: `ph-${i}`,
+      url: PLACEHOLDER_IMAGES[i % PLACEHOLDER_IMAGES.length],
+      title: `Creative moment #${i + 1}`,
+      caption: null,
+      category: PLACEHOLDER_CATEGORIES[i % PLACEHOLDER_CATEGORIES.length],
+      width: null,
+      height: null,
+      sort_order: i,
+    }));
+  }, [dbItems]);
+
+  const categories = useMemo(() => {
+    const set = new Set<string>(["All"]);
+    items.forEach((i) => set.add(i.category ?? "General"));
+    return Array.from(set);
+  }, [items]);
+
+  const [category, setCategory] = useState<string>("All");
   const [lightbox, setLightbox] = useState<number | null>(null);
 
-  const items = PLACEHOLDER.filter(
-    (i) => category === "All" || i.category === category,
+  const filtered = useMemo(
+    () => (category === "All" ? items : items.filter((i) => i.category === category)),
+    [items, category],
   );
 
+  // Keyboard nav for lightbox
+  useEffect(() => {
+    if (lightbox === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(null);
+      if (e.key === "ArrowRight") setLightbox((n) => (n === null ? null : (n + 1) % filtered.length));
+      if (e.key === "ArrowLeft") setLightbox((n) => (n === null ? null : (n - 1 + filtered.length) % filtered.length));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, filtered.length]);
+
   return (
-    <SiteLayout>
-      <section className="relative overflow-hidden bg-hero-wash">
-        <SplashBlob
-          className="pointer-events-none absolute -left-10 top-10 h-72 w-72 opacity-40"
-          color="var(--brand-purple)"
-        />
-        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6">
-          <h1 className="font-display text-5xl font-black text-brand-brown sm:text-6xl">
-            <span className="text-gradient-splash">Gallery</span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-foreground/75">
-            A splash of colour from the ChoraNami community.
-          </p>
-        </div>
-      </section>
+    <SiteLayout transparentHeader>
+      <PageHero
+        kicker="Gallery"
+        title={<>A splash of <span className="text-gradient-splash">colour</span></>}
+        subtitle="Moments from ChoraNami art clubs, homeschool lessons, canvas events and unforgettable parties."
+        accent="purple"
+      />
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+        {/* Category pills */}
         <div className="flex flex-wrap justify-center gap-2">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${
                 category === c
-                  ? "bg-primary text-primary-foreground shadow-splash"
-                  : "bg-card text-foreground/70 ring-1 ring-border hover:bg-accent hover:text-accent-foreground"
+                  ? "bg-gradient-button text-white shadow-glow-orange"
+                  : "glass-card text-brand-brown/80 hover:text-brand-brown hover:-translate-y-0.5"
               }`}
             >
               {c}
@@ -88,33 +123,50 @@ function GalleryPage() {
           ))}
         </div>
 
-        <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
-          {items.map((it, idx) => (
+        {/* Pinterest masonry */}
+        <Masonry
+          breakpointCols={{ default: 4, 1280: 3, 768: 2, 480: 1 }}
+          className="mt-10 flex gap-4"
+          columnClassName="flex flex-col gap-4"
+        >
+          {filtered.map((it, idx) => (
             <motion.button
-              layout
               key={it.id}
+              layout
+              type="button"
               onClick={() => setLightbox(idx)}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: idx * 0.03 }}
-              className="mb-4 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left shadow-card ring-1 ring-border transition hover:-translate-y-1"
-              style={{
-                aspectRatio: idx % 3 === 0 ? "3/4" : idx % 4 === 0 ? "1/1" : "4/5",
-                background: `linear-gradient(135deg, oklch(0.85 0.15 ${it.hue}), oklch(0.7 0.18 ${(it.hue + 60) % 360}))`,
-              }}
-              aria-label={`Open ${it.title}`}
+              transition={{ duration: 0.4, delay: (idx % 8) * 0.04 }}
+              whileHover={{ y: -4 }}
+              className="group relative overflow-hidden rounded-2xl shadow-card ring-1 ring-border text-left"
+              aria-label={`Open ${it.title ?? "image"}`}
             >
-              <div className="flex h-full flex-col justify-end bg-gradient-to-t from-black/50 to-transparent p-4 text-white">
-                <p className="text-xs uppercase tracking-wider opacity-80">
-                  {it.category}
-                </p>
-                <p className="font-display text-lg font-bold">{it.title}</p>
+              <img
+                src={it.url}
+                alt={it.title ?? "ChoraNami artwork"}
+                loading="lazy"
+                className="w-full transition-transform duration-700 group-hover:scale-110"
+                style={{ display: "block" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-4 p-4 text-white opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-yellow">{it.category}</p>
+                <p className="font-display text-lg font-black leading-tight">{it.title}</p>
               </div>
             </motion.button>
           ))}
-        </div>
+        </Masonry>
+
+        {filtered.length === 0 ? (
+          <div className="mt-16 text-center text-brand-brown/60">
+            <Camera className="mx-auto h-10 w-10" />
+            <p className="mt-3">No photos yet in this category.</p>
+          </div>
+        ) : null}
       </section>
 
+      {/* Lightbox */}
       <AnimatePresence>
         {lightbox !== null ? (
           <motion.div
@@ -122,35 +174,49 @@ function GalleryPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setLightbox(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
           >
-            <motion.div
-              initial={{ scale: 0.9 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="relative aspect-[4/5] w-full max-w-lg overflow-hidden rounded-2xl"
-              style={{
-                background: `linear-gradient(135deg, oklch(0.85 0.15 ${items[lightbox].hue}), oklch(0.7 0.18 ${(items[lightbox].hue + 60) % 360}))`,
-              }}
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setLightbox((n) => (n === null ? null : (n - 1 + filtered.length) % filtered.length)); }}
+              className="absolute left-4 top-1/2 z-10 -translate-y-1/2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur hover:bg-white/25"
+              aria-label="Previous"
             >
-              <button
-                type="button"
-                onClick={() => setLightbox(null)}
-                className="absolute right-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brand-brown"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5" />
-              </button>
-              <div className="absolute bottom-0 w-full bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-                <p className="text-xs uppercase tracking-wider opacity-80">
-                  {items[lightbox].category}
-                </p>
-                <p className="font-display text-2xl font-bold">
-                  {items[lightbox].title}
-                </p>
-              </div>
-            </motion.div>
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setLightbox((n) => (n === null ? null : (n + 1) % filtered.length)); }}
+              className="absolute right-4 top-1/2 z-10 -translate-y-1/2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur hover:bg-white/25"
+              aria-label="Next"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setLightbox(null)}
+              className="absolute right-4 top-4 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-brand-brown"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <motion.figure
+              key={lightbox}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-h-[90vh] max-w-5xl overflow-hidden rounded-2xl"
+            >
+              <img src={filtered[lightbox].url} alt={filtered[lightbox].title ?? ""} className="max-h-[85vh] w-auto" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
+                <p className="text-xs font-bold uppercase tracking-widest text-brand-yellow">{filtered[lightbox].category}</p>
+                <p className="mt-1 font-display text-2xl font-black">{filtered[lightbox].title}</p>
+                {filtered[lightbox].caption ? (
+                  <p className="mt-1 text-sm text-white/80">{filtered[lightbox].caption}</p>
+                ) : null}
+              </figcaption>
+            </motion.figure>
           </motion.div>
         ) : null}
       </AnimatePresence>

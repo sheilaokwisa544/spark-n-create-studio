@@ -1,78 +1,80 @@
+# ChoraNami — Phase 2 Full Buildout
 
-# ChoraNami — Build Plan
+Big scope, so I'm splitting into a single coordinated plan. All work stays on the existing brand system (Fraunces + DM Sans, splash palette, glassmorphism, Framer Motion + Swiper) so the redesigned pages feel like siblings of the new Home.
 
-Two quick notes before we start:
+## 1. Modernize every public page (match Home's "classy" register)
 
-- **Framework:** This Lovable template uses **TanStack Start** (React 19 + Vite), not Next.js. It gives you the same full-stack story (SSR, server functions, API routes, SEO) so the brief is fully achievable — I just won't introduce Next.js.
-- **Backend:** I'll use **Lovable Cloud** (managed Supabase under the hood: Postgres + Auth + Storage), so no external accounts needed.
+- **About** — full-bleed animated hero with parallax logo, "our story" timeline with milestone counters, mission/vision as glass cards with gradient borders, team/founders strip (placeholders), values as tilt-hover cards.
+- **Programs** — sticky category rail, hero swiper of program covers, each program as an alternating "showcase slab" with gradient blob backdrop, feature checklist, animated pricing/duration chips, "Book this" CTA opens a modal (booking flow, see §4).
+- **Gallery** — replace current masonry with a true **Pinterest-style** layout using `react-masonry-css`, lightbox with keyboard nav + swipe, category filter as glass pill bar, infinite-scroll batches, subtle image hover zoom + caption reveal. Loads from DB (see §3).
+- **Testimonials** — keep coverflow, add stats row on top ("500+ happy families…"), add a "Wall of Love" masonry section under the swiper for the long tail.
+- **FAQ** — split into categorized tabs (General / Programs / Booking / Pricing), animated accordions with icon per category, "still have questions?" glass CTA card linking to Contact.
+- **Contact** — two-column premium layout, live-validated form with step indicators, contact cards with gradient icons, WhatsApp quick-chat button, embedded Nairobi map with custom brand pin, response-time badge.
 
-Because this scope is very large (7+ public pages, admin dashboard, 5 tables, auth, uploads, emails, CSV export, SEO, animations), I'll ship it in **3 phases** so you can review each before I keep going. If you'd rather I build everything in one shot, say the word.
+## 2. New Events showcase
 
----
+- New `/events` route: hero carousel of upcoming events, filterable grid (upcoming / past), event detail modal (or `/events/$slug`) with date, location, capacity, "RSVP" button that funnels into booking flow.
+- Backed by `events` table (see §3). Featured events also appear on Home.
 
-## Phase 1 — Foundation, brand & public site (this turn)
+## 3. Database (SQL migration)
 
-**Design system**
-- Palette from your logos + brief: Orange `#F58220`, Yellow `#FFC72C`, Turquoise `#1FB6B0`, Purple `#7A4FBF`, Brown `#6B3A1E` (logo text), White, Ink. All as `oklch` semantic tokens in `src/styles.css`.
-- Display font: Fraunces (playful serif, matches logo). Body: DM Sans.
-- Custom Button/Card variants (hero, splash, sunny) — no hard-coded colors in components.
-- Paint-splash SVG accents + Framer Motion for hero, floating art icons, section reveals, page transitions.
+New public tables (RLS + GRANTs, service_role for admin, anon SELECT only on truly public rows):
 
-**Brand assets**
-- Upload the 3 logos via `lovable-assets` and pick the splash logo (image_6) as primary; use the brush-hand shot as hero.
+- `programs` — editable version of the currently hardcoded programs (title, slug, description, features[], color, order, active).
+- `gallery_images` — url, category, title, caption, width, height, sort, published.
+- `testimonials` — name, role, quote, avatar_url, rating, featured, published.
+- `faqs` — category, question, answer, sort, published.
+- `events` — title, slug, description, cover_url, starts_at, ends_at, location, capacity, price, status.
+- `bookings` — program_slug/event_id, parent_name, email, phone, child_age, message, preferred_date, status (new/contacted/confirmed/completed/cancelled), created_at.
+- `contact_messages` — name, email, phone, subject, message, status.
+- `newsletter_subscribers` — email (unique), subscribed_at, unsubscribed_at.
+- `user_roles` + `app_role` enum + `has_role()` security-definer fn (admin gating).
+- `profiles` (id → auth.users, display_name, avatar_url) with auto-create trigger.
 
-**Public pages (TanStack routes, each with unique SEO head())**
-- `/` Home — hero, CTAs, program preview, testimonials strip, CTA band
-- `/about`, `/programs`, `/gallery` (masonry + lightbox + category filter), `/testimonials`, `/faq`, `/contact` (form + map + WhatsApp)
-- Sticky nav, footer, floating WhatsApp button, scroll-to-top, 404 (already exists — restyled)
-- `sitemap.xml` route + `robots.txt`
+Public routes read published rows via a **server publishable client** (narrow `TO anon` SELECT policies). Writes go through `createServerFn` with `requireSupabaseAuth` + `has_role('admin')` checks.
 
-**Lovable Cloud enabled** so Phase 2 can start immediately.
+## 4. Booking flow polish
 
----
+- Multi-step booking modal (Program → Details → Schedule → Review) with progress bar, per-step Zod validation, optimistic submit, success screen with WhatsApp handoff option.
+- Server fn `submitBooking` (public, rate-limited by simple IP+email dedupe) writes to `bookings`, sends notification email to admin via Lovable AI Gateway (or Resend if user later adds a key — I'll wire the abstraction).
+- Contact form + newsletter form get the same treatment (server fns, toast feedback, spam honeypot).
 
-## Phase 2 — Backend, booking & contact
+## 5. Admin dashboard (`/admin/*`, under `_authenticated` + admin role gate)
 
-- Migrations for tables: `programs`, `gallery`, `bookings`, `testimonials`, `contact_messages`, plus `user_roles` (enum `app_role`, `has_role()` SECURITY DEFINER — no role-on-profile).
-- RLS: public SELECT on `programs`, `gallery`, `testimonials`; anon INSERT on `bookings` + `contact_messages`; admin-only for everything else via `has_role(auth.uid(), 'admin')`.
-- Storage buckets: `gallery`, `testimonials` (public read, admin write).
-- Seed default programs (School Art Clubs, Homeschool, ArTogether, Party Boom) from your brief.
-- Server functions:
-  - Public: `submitBooking`, `submitContact`, `listGallery`, `listPrograms`, `listTestimonials`
-  - Admin (behind `requireSupabaseAuth` + role check): CRUD for all tables, booking status transitions
-- Zod validation on every input, honeypot + basic rate-limit on public forms.
-- Booking form on `/contact` (and per-program CTAs prefilling `service`).
-- **Emails** (Lovable managed app emails): booking confirmation to customer, notifications to admin for bookings + contact messages. I'll scaffold templates and wire them into the server functions.
+- `/auth` — email/password + Google sign-in (Google configured via connector in the same migration turn).
+- `/admin` — overview cards (new bookings, unread messages, subscribers, events this month) with sparklines.
+- `/admin/bookings` — table with filters, status change, notes, CSV export.
+- `/admin/messages` — inbox view.
+- `/admin/gallery` — upload to Storage bucket `gallery`, drag-reorder, category assignment, publish toggle.
+- `/admin/programs`, `/admin/events`, `/admin/testimonials`, `/admin/faqs` — CRUD tables with inline edit.
+- `/admin/subscribers` — list + export.
+- All admin data via authenticated server fns; admin check via `has_role`.
 
----
+## 6. SEO performance pass
 
-## Phase 3 — Admin dashboard & polish
+- Per-route `head()` audit: unique title/description, `og:image` wired to route hero (absolute URLs once available), `og:type` correct per page, JSON-LD (`Organization` on root, `Event` on event pages, `FAQPage` on FAQ, `BreadcrumbList` on deep routes).
+- `sitemap.xml` regenerated from DB (programs + events + gallery categories).
+- `robots.txt` allows all, points to sitemap.
+- Image `alt` audit, lazy-loading, `width/height` on all imgs to prevent CLS.
+- Run `list_findings` after deploy, fix all failing SEO findings, mark fixed.
 
-- `/auth` sign-in (email + password; Google optional — say if you want it).
-- `/_authenticated/admin/*` (integration-managed gate) with role check redirect.
-- Dashboard: stat cards (bookings, messages, gallery, testimonials, programs), recent activity.
-- Booking manager: table, search, service filter, status actions (accept/decline/complete), CSV export.
-- Contact manager: read / mark replied / archive / delete.
-- Gallery manager: upload to Storage, edit caption/category, delete.
-- Testimonials manager: CRUD + photo upload.
-- Programs manager: edit copy + image per program.
-- Final SEO pass (JSON-LD Organization + LocalBusiness, OG images per route), Lighthouse-oriented performance pass, dark mode toggle.
+## 7. Technical notes
 
----
+- New deps: `react-masonry-css` (Pinterest layout), `date-fns` (events), `@tanstack/react-table` (admin tables), `recharts` (admin sparklines).
+- Storage buckets: `gallery` (public read), `events` (public read), `avatars` (authenticated).
+- All admin mutations behind `requireSupabaseAuth` + role check; never trust client role claims.
+- Public read paths use publishable server client, not `supabaseAdmin`.
+- Google auth wired via `supabase--configure_social_auth` in the same turn it's added.
 
-## Things I'm deciding for you unless you object
+## Order of execution
 
-- **No Instagram feed** unless you have a token/handle to wire — a static "Follow us" strip instead.
-- **No newsletter subscription** in Phase 1–3 (out of scope; can add later with a `subscribers` table + email confirmation).
-- Google Maps embed uses a plain iframe with your address (share it in a reply, or I'll use "Nairobi, Kenya" as placeholder).
+1. SQL migration (all tables, RLS, roles, storage buckets, triggers) — one migration call for approval.
+2. Seed programs/faqs/testimonials from current hardcoded content (same migration).
+3. Server fns + public data fetchers, refactor pages to read from DB.
+4. Redesign About / Programs / Gallery / Testimonials / FAQ / Contact.
+5. Events route + Home featured-events strip.
+6. Booking flow modal + contact/newsletter server fns + admin notification email.
+7. Auth pages + admin dashboard.
+8. SEO pass (heads, JSON-LD, sitemap from DB, findings sweep).
 
----
-
-## Please confirm / provide
-
-1. **Go ahead with the 3-phase plan?** (or build in one giant turn?)
-2. **Contact details** for the site: phone, email, WhatsApp number, address, Instagram/Facebook handles. I'll use tasteful placeholders if you'd rather fill them later.
-3. **Admin email** to seed as the first admin user (so you can log in immediately after Phase 3).
-4. **Google sign-in for admin** — yes or email+password only?
-
-Reply with answers (or just "go") and I'll start Phase 1.
+This is ~3–4 substantial turns of work after the migration is approved. I'll proceed turn-by-turn and check in with you at each milestone (after DB, after public redesign, after admin, after SEO). Reply "go" to start with the migration, or tell me to trim scope (e.g. skip admin for now, skip events, keep gallery hardcoded, etc.).
