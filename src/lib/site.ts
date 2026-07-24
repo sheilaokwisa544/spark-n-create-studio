@@ -1,5 +1,4 @@
 // Central place for site-wide contact + brand info.
-// Update these values when the client shares real details.
 export const site = {
   name: "ChoraNami",
   tagline: "Creative Education for Young Minds",
@@ -20,8 +19,9 @@ export const nav = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/programs", label: "Programs" },
+  { to: "/events", label: "Events" },
   { to: "/gallery", label: "Gallery" },
-  { to: "/testimonials", label: "Testimonials" },
+  { to: "/testimonials", label: "Reviews" },
   { to: "/faq", label: "FAQ" },
   { to: "/contact", label: "Contact" },
 ] as const;
