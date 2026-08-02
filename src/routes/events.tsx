@@ -69,6 +69,9 @@ function EventsPage() {
         title={<>Come <span className="text-gradient-splash">create</span> with us</>}
         subtitle="Family canvas nights, holiday art camps, school exhibitions and community pop-ups — all on the ChoraNami calendar."
         accent="purple"
+        image={heroParty}
+        ctaPrimary={{ to: "/contact", label: "Reserve a Spot" }}
+        ctaSecondary={{ to: "/gallery", label: "See Past Events" }}
       />
 
       {/* Featured events swiper */}
