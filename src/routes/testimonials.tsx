@@ -11,6 +11,7 @@ import "swiper/css/effect-coverflow";
 import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { listTestimonials } from "@/lib/data.functions";
+import { photos } from "@/lib/photos";
 
 const testimonialsQuery = queryOptions({
   queryKey: ["testimonials"],
