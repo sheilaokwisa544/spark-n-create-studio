@@ -10,10 +10,12 @@ import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { SplashBlob } from "@/components/site/Splash";
 import { PROGRAMS, programColorClasses } from "@/lib/programs";
-import heroKids from "@/assets/hero-kids-painting.jpg";
-import heroParty from "@/assets/hero-party.jpg";
-import heroCanvas from "@/assets/hero-canvas-event.jpg";
-import heroStudent from "@/assets/hero-student-artwork.jpg";
+import { photos } from "@/lib/photos";
+
+const heroKids = photos.schoolClub;
+const heroParty = photos.outdoorParty;
+const heroCanvas = photos.partyTable;
+const heroStudent = photos.miniCanvases;
 
 export const Route = createFileRoute("/programs")({
   head: () => ({
