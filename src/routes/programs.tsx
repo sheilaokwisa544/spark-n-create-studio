@@ -56,6 +56,8 @@ function Programs() {
         title={<>Four ways to <span className="text-gradient-splash">create</span></>}
         subtitle="Structured, joyful and hands-on. Pick the program that fits your school, family, team or event."
         accent="orange"
+        image={heroKids}
+        ctaPrimary={{ to: "/contact", label: "Book a Program" }}
       >
         <div className="flex flex-wrap justify-center gap-2">
           {PROGRAMS.map((p) => (

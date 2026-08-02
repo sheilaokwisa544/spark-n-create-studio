@@ -8,6 +8,7 @@ import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { PROGRAMS } from "@/lib/programs";
 import { site } from "@/lib/site";
+import { photos } from "@/lib/photos";
 import { submitBooking } from "@/lib/submissions.functions";
 import { toast } from "sonner";
 
@@ -128,11 +129,13 @@ function Contact() {
         title={<>Let's make <span className="text-gradient-splash">something</span></>}
         subtitle="Fill in the form to book a program, or reach us directly — we reply within one business day."
         accent="orange"
+        image={photos.outdoorParty}
       >
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-bold text-brand-brown shadow-card">
-          <Clock className="h-3.5 w-3.5 text-brand-turquoise" /> Response within 1 business day
+        <span className="inline-flex items-center gap-2 rounded-full glass-dark px-4 py-2 text-xs font-bold text-white shadow-card">
+          <Clock className="h-3.5 w-3.5 text-brand-yellow" /> Response within 1 business day
         </span>
       </PageHero>
+
 
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1.4fr_1fr]">
         <motion.div

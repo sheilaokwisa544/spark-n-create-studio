@@ -116,7 +116,8 @@ export const listSubscribers = createServerFn({ method: "GET" })
 // Gallery admin
 const galleryInput = z.object({
   id: z.string().uuid().optional(),
-  url: z.string().url(),
+  // Absolute URL or a relative path served by /api/public/gallery-image/*
+  url: z.string().min(1).max(600),
   title: z.string().max(200).optional().nullable(),
   caption: z.string().max(500).optional().nullable(),
   category: z.string().max(50),

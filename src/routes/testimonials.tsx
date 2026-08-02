@@ -11,6 +11,7 @@ import "swiper/css/effect-coverflow";
 import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { listTestimonials } from "@/lib/data.functions";
+import { photos } from "@/lib/photos";
 
 const testimonialsQuery = queryOptions({
   queryKey: ["testimonials"],
@@ -71,6 +72,9 @@ function Testimonials() {
         title={<><span className="text-gradient-splash">Kind words</span> from our community</>}
         subtitle="Six years of colour, one story at a time."
         accent="turquoise"
+        image={photos.handprintTree}
+        ctaPrimary={{ to: "/contact", label: "Start Your Story" }}
+        ctaSecondary={{ to: "/gallery", label: "See the Work" }}
       />
 
       {/* Stats band */}
