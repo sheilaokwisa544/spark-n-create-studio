@@ -264,17 +264,78 @@ function GalleryTab() {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin-gallery"] }); toast.success("Deleted"); },
   });
 
+  const [uploading, setUploading] = useState(false);
+
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setUploading(true);
+    try {
+      for (const file of Array.from(files)) {
+        if (!file.type.startsWith("image/")) { toast.error(`${file.name} is not an image`); continue; }
+        if (file.size > 10 * 1024 * 1024) { toast.error(`${file.name} is larger than 10MB`); continue; }
+        const ext = (file.name.split(".").pop() ?? "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+        const key = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error } = await supabase.storage.from("gallery").upload(key, file, {
+          contentType: file.type,
+          upsert: false,
+        });
+        if (error) { toast.error(error.message); continue; }
+        await upsert({
+          data: {
+            url: `/api/public/gallery-image/${key}`,
+            category,
+            title: title || file.name.replace(/\.[^.]+$/, ""),
+            published: true,
+          },
+        });
+      }
+      setTitle("");
+      qc.invalidateQueries({ queryKey: ["admin-gallery"] });
+      toast.success("Upload complete");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="glass-card rounded-3xl p-5 shadow-glass">
-        <p className="font-bold text-brand-brown">Add image by URL</p>
-        <div className="mt-3 grid gap-2 sm:grid-cols-[2fr_1fr_1fr_auto]">
-          <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" className="rounded-full border border-input bg-white/70 px-4 py-2 text-sm" />
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" className="rounded-full border border-input bg-white/70 px-4 py-2 text-sm" />
+        <p className="font-bold text-brand-brown">Upload images</p>
+        <p className="mt-1 text-xs text-brand-brown/60">JPG, PNG or WebP · up to 10MB each · multiple files allowed</p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title (optional — filename is used)" className="rounded-full border border-input bg-white/70 px-4 py-2 text-sm" />
           <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Category" className="rounded-full border border-input bg-white/70 px-4 py-2 text-sm" />
+        </div>
+        <label className="mt-3 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-orange/40 bg-white/50 px-6 py-10 text-center transition hover:border-brand-orange hover:bg-white/70">
+          {uploading ? (
+            <Loader2 className="h-6 w-6 animate-spin text-brand-orange" />
+          ) : (
+            <ImageIcon className="h-6 w-6 text-brand-orange" />
+          )}
+          <span className="text-sm font-semibold text-brand-brown">
+            {uploading ? "Uploading…" : "Click to choose images"}
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            disabled={uploading}
+            className="hidden"
+            onChange={(e) => { void handleFiles(e.target.files); e.target.value = ""; }}
+          />
+        </label>
+      </div>
+
+      <div className="glass-card rounded-3xl p-5 shadow-glass">
+        <p className="font-bold text-brand-brown">…or add by URL</p>
+        <div className="mt-3 grid gap-2 sm:grid-cols-[2fr_auto]">
+          <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" className="rounded-full border border-input bg-white/70 px-4 py-2 text-sm" />
           <button type="button" onClick={() => url && addM.mutate()} disabled={addM.isPending} className="btn-pill bg-gradient-button text-white shadow-glow-orange text-sm">Add</button>
         </div>
       </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(q.data ?? []).map((g: any) => (
           <div key={g.id} className="group relative overflow-hidden rounded-2xl bg-card shadow-card ring-1 ring-border">
