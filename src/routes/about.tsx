@@ -7,6 +7,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { SplashBlob } from "@/components/site/Splash";
 import logoAsset from "@/assets/choranami-logo.jpg.asset.json";
 import brushesAsset from "@/assets/choranami-brushes.jpg.asset.json";
+import { photos } from "@/lib/photos";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
