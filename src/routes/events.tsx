@@ -12,9 +12,11 @@ import "swiper/css/pagination";
 import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { listEvents } from "@/lib/data.functions";
-import heroParty from "@/assets/hero-party.jpg";
-import heroCanvas from "@/assets/hero-canvas-event.jpg";
-import heroKids from "@/assets/hero-kids-painting.jpg";
+import { photos } from "@/lib/photos";
+
+const heroParty = photos.outdoorParty;
+const heroCanvas = photos.partyTable;
+const heroKids = photos.schoolClub;
 
 const eventsQuery = queryOptions({ queryKey: ["events"], queryFn: () => listEvents() });
 
