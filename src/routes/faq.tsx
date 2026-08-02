@@ -67,6 +67,8 @@ function FAQ() {
         title={<><span className="text-gradient-splash">Frequently</span> asked</>}
         subtitle="Can't find your question? Drop us a message — we reply within one business day."
         accent="orange"
+        image={photos.miniCanvases}
+        ctaPrimary={{ to: "/contact", label: "Ask Us Anything" }}
       >
         <div className="flex flex-wrap justify-center gap-2">
           {categories.map((c) => (
