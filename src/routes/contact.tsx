@@ -8,6 +8,7 @@ import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { PROGRAMS } from "@/lib/programs";
 import { site } from "@/lib/site";
+import { photos } from "@/lib/photos";
 import { submitBooking } from "@/lib/submissions.functions";
 import { toast } from "sonner";
 
