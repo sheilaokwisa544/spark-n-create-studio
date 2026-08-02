@@ -46,27 +46,24 @@ export const Route = createFileRoute("/gallery")({
   notFoundComponent: () => <div className="p-10 text-center">Not found</div>,
 });
 
-// Fallback gradient placeholders when DB is empty
-const PLACEHOLDER_IMAGES = [heroKids, heroParty, heroCanvas, heroStudent];
-const PLACEHOLDER_CATEGORIES = ["School Art Clubs", "Birthday Parties", "Canvas Painting", "Children's Artwork"];
-
+// Real ChoraNami photos shown until the admin uploads more.
 function GalleryPage() {
   const { data: dbItems } = useSuspenseQuery(galleryQuery);
 
   const items = useMemo(() => {
     if (dbItems && dbItems.length > 0) return dbItems;
-    // Show a bright placeholder grid until admin uploads photos.
-    return Array.from({ length: 16 }).map((_, i) => ({
+    return galleryPhotos.map((p, i) => ({
       id: `ph-${i}`,
-      url: PLACEHOLDER_IMAGES[i % PLACEHOLDER_IMAGES.length],
-      title: `Creative moment #${i + 1}`,
+      url: p.url,
+      title: p.title,
       caption: null,
-      category: PLACEHOLDER_CATEGORIES[i % PLACEHOLDER_CATEGORIES.length],
+      category: p.category,
       width: null,
       height: null,
       sort_order: i,
     }));
   }, [dbItems]);
+
 
   const categories = useMemo(() => {
     const set = new Set<string>(["All"]);
