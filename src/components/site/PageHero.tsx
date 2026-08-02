@@ -48,7 +48,7 @@ export function PageHero({
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/45" />
         </div>
         <div
-          className={`relative mx-auto w-full max-w-7xl px-4 sm:px-6 ${
+          className={`relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 ${
             align === "center" ? "text-center" : ""
           }`}
         >
