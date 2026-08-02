@@ -44,8 +44,8 @@ export function PageHero({
             alt=""
             className="h-full w-full scale-110 object-cover animate-[float-slow_18s_ease-in-out_infinite]"
           />
-          <div className="absolute inset-0 bg-gradient-to-tr from-brand-brown/90 via-brand-brown/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-brand-brown via-brand-brown/75 to-brand-brown/25" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/35 to-black/45" />
         </div>
         <div
           className={`relative mx-auto w-full max-w-7xl px-4 sm:px-6 ${
