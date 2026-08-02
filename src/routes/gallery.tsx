@@ -98,6 +98,9 @@ function GalleryPage() {
         title={<>A splash of <span className="text-gradient-splash">colour</span></>}
         subtitle="Moments from ChoraNami art clubs, homeschool lessons, canvas events and unforgettable parties."
         accent="purple"
+        image={heroKids}
+        ctaPrimary={{ to: "/contact", label: "Book Your Session" }}
+        ctaSecondary={{ to: "/events", label: "Upcoming Events" }}
       />
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
