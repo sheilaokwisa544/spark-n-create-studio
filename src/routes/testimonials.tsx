@@ -71,6 +71,9 @@ function Testimonials() {
         title={<><span className="text-gradient-splash">Kind words</span> from our community</>}
         subtitle="Six years of colour, one story at a time."
         accent="turquoise"
+        image={photos.handprintTree}
+        ctaPrimary={{ to: "/contact", label: "Start Your Story" }}
+        ctaSecondary={{ to: "/gallery", label: "See the Work" }}
       />
 
       {/* Stats band */}
