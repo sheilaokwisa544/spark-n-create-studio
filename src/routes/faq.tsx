@@ -12,6 +12,7 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { listFaqs } from "@/lib/data.functions";
+import { photos } from "@/lib/photos";
 
 const faqsQuery = queryOptions({ queryKey: ["faqs"], queryFn: () => listFaqs() });
 
