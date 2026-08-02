@@ -7,10 +7,9 @@ import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { listGallery } from "@/lib/data.functions";
-import heroKids from "@/assets/hero-kids-painting.jpg";
-import heroParty from "@/assets/hero-party.jpg";
-import heroCanvas from "@/assets/hero-canvas-event.jpg";
-import heroStudent from "@/assets/hero-student-artwork.jpg";
+import { photos, galleryPhotos } from "@/lib/photos";
+
+const heroKids = photos.schoolClub;
 
 const galleryQuery = queryOptions({
   queryKey: ["gallery"],
