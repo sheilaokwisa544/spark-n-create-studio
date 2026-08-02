@@ -57,6 +57,9 @@ function About() {
         title={<>Every child is <span className="text-gradient-splash">an artist</span></>}
         subtitle="ChoraNami began with one belief — that creativity is a language every child speaks fluently. We just give them the tools, the time and the space to express it."
         accent="yellow"
+        image={photos.workshopTable}
+        ctaPrimary={{ to: "/programs", label: "Explore Programs" }}
+        ctaSecondary={{ to: "/contact", label: "Work With Us" }}
       />
 
       {/* Mission + Vision */}
