@@ -206,12 +206,8 @@ function FloatingDecor() {
 /* ============================================================
    SERVICES — horizontal carousel with big imagery
 ============================================================ */
-const PROGRAM_MEDIA: Record<string, { image: string; emoji: string; hue: string }> = {
-  "school-art-clubs":       { image: heroKids,    emoji: "🎨", hue: "from-brand-orange to-brand-yellow" },
-  "homeschool-art-classes": { image: brushesAsset.url, emoji: "🖌", hue: "from-brand-turquoise to-brand-purple" },
-  artogether:               { image: heroCanvas,  emoji: "🎉", hue: "from-brand-purple to-brand-orange" },
-  "party-boom":             { image: heroParty,   emoji: "🎈", hue: "from-brand-yellow to-brand-orange" },
-};
+
+
 
 function ServicesCarousel() {
   return (
