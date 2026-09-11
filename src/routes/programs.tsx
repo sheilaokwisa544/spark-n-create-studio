@@ -47,7 +47,7 @@ function Programs() {
     <SiteLayout transparentHeader>
       <PageHero
         kicker="Our Programs"
-        title={<>Four ways to <span className="text-gradient-splash">create</span></>}
+        title={<>Many ways to <span className="text-gradient-splash">create</span></>}
         subtitle="Structured, joyful and hands-on. Pick the program that fits your school, family, team or event."
         accent="orange"
         image={heroKids}
@@ -78,10 +78,10 @@ function Programs() {
         >
           {PROGRAMS.map((p) => (
             <SwiperSlide key={p.slug} className="!rounded-3xl overflow-hidden">
-              <img src={PROGRAM_MEDIA[p.slug].image} alt={p.title} className="h-full w-full object-cover" />
+              <img src={p.image} alt={p.title} className="h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-0 p-6 text-white">
-                <p className="text-xs uppercase tracking-widest text-brand-yellow">{PROGRAM_MEDIA[p.slug].badge}</p>
+                <p className="text-xs uppercase tracking-widest text-brand-yellow">{p.badge}</p>
                 <h3 className="font-display text-2xl font-black">{p.title}</h3>
               </div>
             </SwiperSlide>
@@ -92,7 +92,6 @@ function Programs() {
       {/* Program showcase slabs */}
       <section className="mx-auto max-w-7xl space-y-24 px-4 py-16 sm:px-6 md:py-24">
         {PROGRAMS.map((p, i) => {
-          const media = PROGRAM_MEDIA[p.slug];
           const Icon = p.Icon;
           void iconMap;
           return (
