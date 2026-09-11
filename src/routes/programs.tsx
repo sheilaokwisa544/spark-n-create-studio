@@ -39,14 +39,8 @@ export const Route = createFileRoute("/programs")({
   component: Programs,
 });
 
-const PROGRAM_MEDIA: Record<string, { image: string; badge: string }> = {
-  "school-art-clubs": { image: heroKids, badge: "In Schools" },
-  "homeschool-art-classes": { image: heroStudent, badge: "At Home" },
-  artogether: { image: heroCanvas, badge: "Team Events" },
-  "party-boom": { image: heroParty, badge: "Parties" },
-};
-
 const iconMap: Record<string, LucideIcon> = { GraduationCap, Palette, Users, PartyPopper };
+
 
 function Programs() {
   return (
