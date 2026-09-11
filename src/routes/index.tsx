@@ -215,7 +215,7 @@ function ServicesCarousel() {
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           kicker="Our Services"
-          title={<>Four ways to spark <span className="text-gradient-splash">creativity</span></>}
+          title={<>Many ways to spark <span className="text-gradient-splash">creativity</span></>}
           sub="Every ChoraNami program is built around one belief — that every child is already an artist."
         />
       </div>
@@ -235,7 +235,6 @@ function ServicesCarousel() {
           className="!pb-14 !px-4 sm:!px-8 lg:!px-16"
         >
           {PROGRAMS.map((p) => {
-            const media = PROGRAM_MEDIA[p.slug];
             return (
               <SwiperSlide key={p.slug}>
                 <motion.div
@@ -244,17 +243,23 @@ function ServicesCarousel() {
                   className="group relative h-[460px] overflow-hidden rounded-[2rem] shadow-splash ring-1 ring-white/40"
                 >
                   <img
-                    src={media.image}
+                    src={p.image}
                     alt={p.title}
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${media.hue} opacity-70 mix-blend-multiply`} />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${p.hue} opacity-70 mix-blend-multiply`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
                   <div className="absolute top-5 left-5 inline-flex items-center gap-2 rounded-full glass-dark px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-white">
-                    <span className="text-base">{media.emoji}</span> {p.title.split(" ")[0]}
+                    <span className="text-base">{p.emoji}</span> {p.title.split(" ")[0]}
                   </div>
+
+                  {p.comingSoon ? (
+                    <div className="absolute top-5 right-5 rounded-full bg-white px-3 py-1.5 text-xs font-black uppercase tracking-widest text-brand-brown shadow-card">
+                      Coming Soon
+                    </div>
+                  ) : null}
 
                   <div className="absolute bottom-0 p-7 text-white">
                     <h3 className="font-display text-3xl font-black leading-tight">
@@ -266,10 +271,11 @@ function ServicesCarousel() {
                       hash={p.slug}
                       className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-bold text-brand-brown hover:bg-brand-yellow transition group/btn"
                     >
-                      Read More
+                      {p.comingSoon ? "Register Interest" : "Read More"}
                       <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
                     </Link>
                   </div>
+
                 </motion.div>
               </SwiperSlide>
             );
