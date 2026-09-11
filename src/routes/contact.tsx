@@ -6,7 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { Mail, Phone, MapPin, MessageCircle, Loader2, Check, Clock, ArrowRight } from "lucide-react";
 import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
-import { PROGRAMS } from "@/lib/programs";
+import { PROGRAMS, BOOKABLE_PROGRAMS } from "@/lib/programs";
 import { site } from "@/lib/site";
 import { photos } from "@/lib/photos";
 import { submitBooking } from "@/lib/submissions.functions";
@@ -171,7 +171,7 @@ function Contact() {
               <div className="mt-6 space-y-4">
                 {step === 0 ? (
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {PROGRAMS.map((p) => (
+                    {BOOKABLE_PROGRAMS.map((p) => (
                       <button
                         key={p.slug}
                         type="button"
