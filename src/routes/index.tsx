@@ -16,7 +16,6 @@ import "swiper/css/pagination";
 import { SiteLayout } from "@/components/site/Layout";
 import { SplashBlob } from "@/components/site/Splash";
 import coverAsset from "@/assets/choranami-cover.png.asset.json";
-import brushesAsset from "@/assets/choranami-brushes.jpg.asset.json";
 import { photos } from "@/lib/photos";
 
 const heroKids = photos.schoolClub;
