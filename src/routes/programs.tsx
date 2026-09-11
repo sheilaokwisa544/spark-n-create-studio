@@ -39,21 +39,15 @@ export const Route = createFileRoute("/programs")({
   component: Programs,
 });
 
-const PROGRAM_MEDIA: Record<string, { image: string; badge: string }> = {
-  "school-art-clubs": { image: heroKids, badge: "In Schools" },
-  "homeschool-art-classes": { image: heroStudent, badge: "At Home" },
-  artogether: { image: heroCanvas, badge: "Team Events" },
-  "party-boom": { image: heroParty, badge: "Parties" },
-};
-
 const iconMap: Record<string, LucideIcon> = { GraduationCap, Palette, Users, PartyPopper };
+
 
 function Programs() {
   return (
     <SiteLayout transparentHeader>
       <PageHero
         kicker="Our Programs"
-        title={<>Four ways to <span className="text-gradient-splash">create</span></>}
+        title={<>Many ways to <span className="text-gradient-splash">create</span></>}
         subtitle="Structured, joyful and hands-on. Pick the program that fits your school, family, team or event."
         accent="orange"
         image={heroKids}
@@ -84,10 +78,10 @@ function Programs() {
         >
           {PROGRAMS.map((p) => (
             <SwiperSlide key={p.slug} className="!rounded-3xl overflow-hidden">
-              <img src={PROGRAM_MEDIA[p.slug].image} alt={p.title} className="h-full w-full object-cover" />
+              <img src={p.image} alt={p.title} className="h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-0 p-6 text-white">
-                <p className="text-xs uppercase tracking-widest text-brand-yellow">{PROGRAM_MEDIA[p.slug].badge}</p>
+                <p className="text-xs uppercase tracking-widest text-brand-yellow">{p.badge}</p>
                 <h3 className="font-display text-2xl font-black">{p.title}</h3>
               </div>
             </SwiperSlide>
@@ -98,7 +92,6 @@ function Programs() {
       {/* Program showcase slabs */}
       <section className="mx-auto max-w-7xl space-y-24 px-4 py-16 sm:px-6 md:py-24">
         {PROGRAMS.map((p, i) => {
-          const media = PROGRAM_MEDIA[p.slug];
           const Icon = p.Icon;
           void iconMap;
           return (
@@ -116,10 +109,15 @@ function Programs() {
               <div className="relative">
                 <SplashBlob className="pointer-events-none absolute -left-8 -top-8 h-72 w-72 opacity-30" color={`var(--brand-${p.color})`} />
                 <div className="relative overflow-hidden rounded-[2rem] shadow-splash ring-1 ring-white">
-                  <img src={media.image} alt={p.title} className="h-[420px] w-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
+                  <img src={p.image} alt={p.title} className="h-[420px] w-full object-cover transition-transform duration-700 hover:scale-110" loading="lazy" />
                   <div className={`absolute top-5 left-5 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-widest ${programColorClasses[p.color]}`}>
-                    {media.badge}
+                    {p.badge}
                   </div>
+                  {p.comingSoon ? (
+                    <div className="absolute top-5 right-5 inline-flex items-center gap-1.5 rounded-full bg-brand-brown px-3 py-1.5 text-xs font-black uppercase tracking-widest text-white shadow-card animate-pulse">
+                      Coming Soon
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div>
@@ -127,6 +125,9 @@ function Programs() {
                   <Icon className="h-7 w-7" />
                 </div>
                 <h2 className="mt-4 font-display text-4xl font-black text-brand-brown md:text-5xl">{p.title}</h2>
+                {p.tagline ? (
+                  <p className="mt-2 font-display text-lg font-bold text-brand-orange">{p.tagline}</p>
+                ) : null}
                 <p className="mt-3 text-lg text-foreground/75">{p.description}</p>
                 <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                   {p.features.map((f) => (
@@ -137,17 +138,24 @@ function Programs() {
                   ))}
                 </ul>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link
-                    to="/contact"
-                    search={{ service: p.slug }}
-                    className="btn-pill bg-gradient-button text-white shadow-glow-orange"
-                  >
-                    {p.cta} <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  {p.comingSoon ? (
+                    <Link to="/contact" className="btn-pill bg-brand-brown text-white shadow-card">
+                      {p.cta} <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/contact"
+                      search={{ service: p.slug }}
+                      className="btn-pill bg-gradient-button text-white shadow-glow-orange"
+                    >
+                      {p.cta} <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  )}
                   <Link to="/gallery" className="btn-pill bg-white text-brand-brown ring-1 ring-border">
                     See it in action
                   </Link>
                 </div>
+
               </div>
             </motion.article>
           );
