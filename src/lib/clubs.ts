@@ -130,7 +130,7 @@ export const CLUBS: Club[] = [
       "ChoraNami Art Club — practical, project-based drawing, painting and mixed-media clubs for children in Kenyan schools and homeschool groups.",
   },
   {
-    slug: "fashion",
+    slug: "fashion-design",
     programSlug: "fashion-design-club",
     name: "Fashion & Design Club",
     tagline: "Think it. Design it. Make it.",

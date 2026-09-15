@@ -10,6 +10,7 @@ import { SiteLayout } from "@/components/site/Layout";
 import { PageHero } from "@/components/site/PageHero";
 import { SplashBlob } from "@/components/site/Splash";
 import { PROGRAMS, programColorClasses } from "@/lib/programs";
+import { CLUB_PAGE_FOR_PROGRAM } from "@/lib/clubs";
 import { photos } from "@/lib/photos";
 
 const heroKids = photos.schoolClub;
@@ -151,6 +152,15 @@ function Programs() {
                       {p.cta} <ArrowRight className="h-4 w-4" />
                     </Link>
                   )}
+                  {CLUB_PAGE_FOR_PROGRAM[p.slug] ? (
+                    <Link
+                      to="/programmes/$club"
+                      params={{ club: CLUB_PAGE_FOR_PROGRAM[p.slug] }}
+                      className="btn-pill bg-brand-turquoise text-white shadow-card"
+                    >
+                      Explore More <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  ) : null}
                   <Link to="/gallery" className="btn-pill bg-white text-brand-brown ring-1 ring-border">
                     See it in action
                   </Link>

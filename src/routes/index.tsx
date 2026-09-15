@@ -23,6 +23,7 @@ const heroParty = photos.outdoorParty;
 const heroCanvas = photos.partyTable;
 const heroStudent = photos.miniCanvases;
 import { PROGRAMS } from "@/lib/programs";
+import { CLUB_PAGE_FOR_PROGRAM } from "@/lib/clubs";
 import { site } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
@@ -265,14 +266,25 @@ function ServicesCarousel() {
                       {p.title}
                     </h3>
                     <p className="mt-2 text-sm text-white/85 max-w-sm">{p.short}</p>
-                    <Link
-                      to="/programs"
-                      hash={p.slug}
-                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-bold text-brand-brown hover:bg-brand-yellow transition group/btn"
-                    >
-                      {p.comingSoon ? "Register Interest" : "Read More"}
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-                    </Link>
+                    {CLUB_PAGE_FOR_PROGRAM[p.slug] ? (
+                      <Link
+                        to="/programmes/$club"
+                        params={{ club: CLUB_PAGE_FOR_PROGRAM[p.slug] }}
+                        className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-bold text-brand-brown hover:bg-brand-yellow transition group/btn"
+                      >
+                        Explore More
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/programs"
+                        hash={p.slug}
+                        className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-bold text-brand-brown hover:bg-brand-yellow transition group/btn"
+                      >
+                        Read More
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                      </Link>
+                    )}
                   </div>
 
                 </motion.div>
