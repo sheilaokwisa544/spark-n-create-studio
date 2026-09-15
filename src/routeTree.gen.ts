@@ -20,6 +20,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProgrammesClubRouteImport } from './routes/programmes.$club'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ApiPublicGalleryImagePathRouteImport } from './routes/api/public/gallery-image.$path'
 
@@ -77,6 +78,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProgrammesClubRoute = ProgrammesClubRouteImport.update({
+  id: '/programmes/$club',
+  path: '/programmes/$club',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/testimonials': typeof TestimonialsRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/programmes/$club': typeof ProgrammesClubRoute
   '/api/public/gallery-image/$path': typeof ApiPublicGalleryImagePathRoute
 }
 export interface FileRoutesByTo {
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/testimonials': typeof TestimonialsRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/programmes/$club': typeof ProgrammesClubRoute
   '/api/public/gallery-image/$path': typeof ApiPublicGalleryImagePathRoute
 }
 export interface FileRoutesById {
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/testimonials': typeof TestimonialsRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/programmes/$club': typeof ProgrammesClubRoute
   '/api/public/gallery-image/$path': typeof ApiPublicGalleryImagePathRoute
 }
 export interface FileRouteTypes {
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/testimonials'
     | '/admin'
+    | '/programmes/$club'
     | '/api/public/gallery-image/$path'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/testimonials'
     | '/admin'
+    | '/programmes/$club'
     | '/api/public/gallery-image/$path'
   id:
     | '__root__'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/testimonials'
     | '/_authenticated/admin'
+    | '/programmes/$club'
     | '/api/public/gallery-image/$path'
   fileRoutesById: FileRoutesById
 }
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   ProgramsRoute: typeof ProgramsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TestimonialsRoute: typeof TestimonialsRoute
+  ProgrammesClubRoute: typeof ProgrammesClubRoute
   ApiPublicGalleryImagePathRoute: typeof ApiPublicGalleryImagePathRoute
 }
 
@@ -273,6 +286,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/programmes/$club': {
+      id: '/programmes/$club'
+      path: '/programmes/$club'
+      fullPath: '/programmes/$club'
+      preLoaderRoute: typeof ProgrammesClubRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -313,6 +333,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgramsRoute: ProgramsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TestimonialsRoute: TestimonialsRoute,
+  ProgrammesClubRoute: ProgrammesClubRoute,
   ApiPublicGalleryImagePathRoute: ApiPublicGalleryImagePathRoute,
 }
 export const routeTree = rootRouteImport
