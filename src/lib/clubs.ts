@@ -23,12 +23,10 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { photos } from "@/lib/photos";
 import { crochetPhotos } from "@/lib/crochet-photos";
-import crochetClub from "@/assets/crochet-club.jpg";
 import fashionDesignClub from "@/assets/fashion-design-club.jpg";
 import aiForTeens from "@/assets/ai-for-teens.jpg";
 import clubArtHero from "@/assets/club-art-hero.jpg";
 import clubFashionHero from "@/assets/club-fashion-hero.jpg";
-import clubCrochetHero from "@/assets/club-crochet-hero.jpg";
 import clubAiHero from "@/assets/club-ai-hero.jpg";
 
 export type ClubActivity = { label: string; Icon: LucideIcon };

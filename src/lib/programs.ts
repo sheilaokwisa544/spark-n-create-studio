@@ -2,7 +2,6 @@ import { Palette, Users, PartyPopper, GraduationCap, Scissors, Shirt, Sparkles }
 import type { LucideIcon } from "lucide-react";
 import { photos } from "@/lib/photos";
 import { crochetPhotos } from "@/lib/crochet-photos";
-import crochetClub from "@/assets/crochet-club.jpg";
 import fashionDesignClub from "@/assets/fashion-design-club.jpg";
 import aiForTeens from "@/assets/ai-for-teens.jpg";
 
