@@ -1,6 +1,7 @@
 import { Palette, Users, PartyPopper, GraduationCap, Scissors, Shirt, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { photos } from "@/lib/photos";
+import { crochetPhotos } from "@/lib/crochet-photos";
 import crochetClub from "@/assets/crochet-club.jpg";
 import fashionDesignClub from "@/assets/fashion-design-club.jpg";
 import aiForTeens from "@/assets/ai-for-teens.jpg";
@@ -108,7 +109,7 @@ export const PROGRAMS: Program[] = [
     cta: "Explore Crochet Club",
     Icon: Scissors,
     color: "yellow",
-    image: crochetClub,
+    image: crochetPhotos.beginnerEssentials,
     badge: "Handmade",
     emoji: "🧶",
     hue: "from-brand-yellow to-brand-turquoise",
