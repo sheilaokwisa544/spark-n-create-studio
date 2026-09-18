@@ -23,10 +23,9 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { photos } from "@/lib/photos";
 import { crochetPhotos } from "@/lib/crochet-photos";
-import fashionDesignClub from "@/assets/fashion-design-club.jpg";
+import { fashionPhotos } from "@/lib/fashion-photos";
 import aiForTeens from "@/assets/ai-for-teens.jpg";
 import clubArtHero from "@/assets/club-art-hero.jpg";
-import clubFashionHero from "@/assets/club-fashion-hero.jpg";
 import clubAiHero from "@/assets/club-ai-hero.jpg";
 
 export type ClubActivity = { label: string; Icon: LucideIcon };
@@ -135,7 +134,7 @@ export const CLUBS: Club[] = [
     tagline: "Think it. Design it. Make it.",
     intro:
       "A practical fashion club where children and teens move from sketches and mood boards to real stitched pieces. A making club, not a theory class.",
-    heroImage: clubFashionHero,
+    heroImage: fashionPhotos.yellowDressSketch,
     accent: "purple",
     about: {
       teaches:
@@ -163,21 +162,24 @@ export const CLUBS: Club[] = [
       { label: "Fashion showcases", Icon: Presentation },
     ],
     projects: [
-      { name: "Fashion Illustration", description: "Build a personal sketchbook of original looks.", skill: "Drawing & proportion", image: fashionDesignClub },
-      { name: "Simple Sewing Project", description: "A first stitched piece, start to finish.", skill: "Basic sewing", image: clubFashionHero },
-      { name: "Embroidery Piece", description: "Hand-stitched detail on fabric or a garment.", skill: "Hand embroidery", image: photos.tshirtLeaves },
-      { name: "Upcycled Fashion", description: "Turn an old garment into something new.", skill: "Reworking & finishing", image: photos.tshirtWave },
-      { name: "Accessories", description: "Bags, scrunchies, pouches and wearable extras.", skill: "Construction", image: photos.workshopTable },
-      { name: "Mini Fashion Collection", description: "Three linked pieces designed around one theme.", skill: "Collection thinking", image: photos.partyTable },
+      { name: "Fashion Illustration", description: "Build a personal sketchbook of original looks.", skill: "Drawing & proportion", image: fashionPhotos.yellowDressSketch },
+      { name: "Figure & Garment Planning", description: "Use fashion proportions to plan silhouettes and garment shapes.", skill: "Proportion & construction", image: fashionPhotos.figureProportions },
+      { name: "Stitch Sample Library", description: "Practise decorative stitches before using them in a finished design.", skill: "Stitch control", image: fashionPhotos.stitchGuide },
+      { name: "Botanical Embroidery", description: "Build leaves and nature-inspired details with layered stitches.", skill: "Hand embroidery", image: fashionPhotos.leafEmbroidery },
+      { name: "Embroidered Tote", description: "Plan and stitch a useful bag with a personalised floral design.", skill: "Design & finishing", image: fashionPhotos.embroideredTote },
+      { name: "Upcycled Fashion", description: "Transform existing garments with fabric panels, patches and visible stitching.", skill: "Reworking & creativity", image: fashionPhotos.upcycledShirts },
+      { name: "Statement Trousers", description: "Reimagine denim with contrast fabric, patches and considered details.", skill: "Upcycling & styling", image: fashionPhotos.upcycledTrousers },
     ],
-    galleryCategories: ["Fashion & Design", "T-Shirt Painting"],
+    galleryCategories: ["Fashion & Design", "Fashion Illustration", "Embroidery", "Upcycling"],
     galleryFallback: [
-      { url: clubFashionHero, title: "Sketching and stitching", category: "Fashion & Design" },
-      { url: fashionDesignClub, title: "Design club in session", category: "Fashion & Design" },
-      { url: photos.tshirtLeaves, title: "Botanical tee printing", category: "T-Shirt Painting" },
-      { url: photos.tshirtWave, title: "Hand-painted wave tee", category: "T-Shirt Painting" },
-      { url: photos.workshopTable, title: "Materials table", category: "Fashion & Design" },
-      { url: photos.miniCanvases, title: "Design showcase", category: "Fashion & Design" },
+      { url: fashionPhotos.figureProportions, title: "Fashion figure proportions", category: "Fashion Illustration" },
+      { url: fashionPhotos.yellowDressSketch, title: "Yellow dress concept sketch", category: "Fashion Illustration" },
+      { url: fashionPhotos.stitchGuide, title: "Decorative stitch guide", category: "Embroidery" },
+      { url: fashionPhotos.embroideryTechniques, title: "Embroidery technique practice", category: "Embroidery" },
+      { url: fashionPhotos.leafEmbroidery, title: "Botanical embroidery studies", category: "Embroidery" },
+      { url: fashionPhotos.embroideredTote, title: "Floral embroidered tote", category: "Fashion & Design" },
+      { url: fashionPhotos.upcycledShirts, title: "Upcycled shirt collection", category: "Upcycling" },
+      { url: fashionPhotos.upcycledTrousers, title: "Upcycled statement trousers", category: "Upcycling" },
     ],
     offerings: [
       { title: "School Clubs", description: "Weekly fashion and design clubs in your school." },
