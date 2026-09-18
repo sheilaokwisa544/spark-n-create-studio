@@ -22,12 +22,11 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { photos } from "@/lib/photos";
-import crochetClub from "@/assets/crochet-club.jpg";
+import { crochetPhotos } from "@/lib/crochet-photos";
 import fashionDesignClub from "@/assets/fashion-design-club.jpg";
 import aiForTeens from "@/assets/ai-for-teens.jpg";
 import clubArtHero from "@/assets/club-art-hero.jpg";
 import clubFashionHero from "@/assets/club-fashion-hero.jpg";
-import clubCrochetHero from "@/assets/club-crochet-hero.jpg";
 import clubAiHero from "@/assets/club-ai-hero.jpg";
 
 export type ClubActivity = { label: string; Icon: LucideIcon };
@@ -198,7 +197,7 @@ export const CLUBS: Club[] = [
     tagline: "Learn, create, and make something beautiful with your own hands.",
     intro:
       "Crochet taught through small, achievable projects. Learners build stitches, patience and coordination while making pieces they can actually use.",
-    heroImage: clubCrochetHero,
+    heroImage: crochetPhotos.beginnerEssentials,
     accent: "yellow",
     about: {
       teaches:
@@ -226,21 +225,24 @@ export const CLUBS: Club[] = [
       { label: "Designing original pieces", Icon: Lightbulb },
     ],
     projects: [
-      { name: "Stitch Samples", description: "A practice square library of every stitch learnt.", skill: "Stitch control", image: clubCrochetHero },
-      { name: "Small Accessories", description: "Keyrings, headbands and coasters to keep.", skill: "Shaping", image: crochetClub },
-      { name: "Crochet Bag", description: "A full bag project with handles and finishing.", skill: "Project planning", image: photos.workshopTable },
-      { name: "Decorations", description: "Hanging pieces and room decor in colour.", skill: "Colour work", image: photos.handprintFlowers },
-      { name: "Wearable Pieces", description: "Scarves, beanies and simple wearables.", skill: "Measurement & fit", image: photos.miniCanvases },
-      { name: "Learner-Designed Project", description: "Their own idea, sketched then crocheted.", skill: "Original design", image: photos.schoolClub },
+      { name: "Stitch Samples", description: "A practice square library of every stitch learnt.", skill: "Stitch control", image: crochetPhotos.pastelTools },
+      { name: "Small Accessories", description: "Keyrings, headbands and coasters to keep.", skill: "Shaping", image: crochetPhotos.headbands },
+      { name: "Crochet Bag", description: "A full bag project with handles and finishing.", skill: "Project planning", image: crochetPhotos.tote },
+      { name: "Decorations", description: "Hanging pieces and room decor in colour.", skill: "Colour work", image: crochetPhotos.flower },
+      { name: "Wearable Pieces", description: "Scarves, beanies and simple wearables.", skill: "Measurement & fit", image: crochetPhotos.flowerPatterns },
+      { name: "Learner-Designed Project", description: "Their own idea, sketched then crocheted.", skill: "Original design", image: crochetPhotos.pouch },
     ],
     galleryCategories: ["Crochet", "Children's Artwork"],
     galleryFallback: [
-      { url: clubCrochetHero, title: "First stitches", category: "Crochet" },
-      { url: crochetClub, title: "Crochet club table", category: "Crochet" },
-      { url: photos.workshopTable, title: "Tools and yarn", category: "Crochet" },
-      { url: photos.handprintFlowers, title: "Colour inspiration", category: "Children's Artwork" },
-      { url: photos.miniCanvases, title: "Finished pieces", category: "Crochet" },
-      { url: photos.schoolClub, title: "Club in session", category: "Crochet" },
+      { url: crochetPhotos.beginnerEssentials, title: "Beginner crochet essentials", category: "Tools & Learning" },
+      { url: crochetPhotos.pastelTools, title: "Yarn, hooks and stitch markers", category: "Tools & Learning" },
+      { url: crochetPhotos.hookSet, title: "Crochet hook set", category: "Tools & Learning" },
+      { url: crochetPhotos.workspaceHooks, title: "Creative crochet workspace", category: "Tools & Learning" },
+      { url: crochetPhotos.pouch, title: "Handmade crochet pouch", category: "Finished Projects" },
+      { url: crochetPhotos.tote, title: "Checkerboard crochet tote", category: "Finished Projects" },
+      { url: crochetPhotos.headbands, title: "Decorative crochet headbands", category: "Finished Projects" },
+      { url: crochetPhotos.flowerPatterns, title: "Crochet flower pattern practice", category: "Patterns & Practice" },
+      { url: crochetPhotos.flower, title: "Finished crochet flower", category: "Patterns & Practice" },
     ],
     offerings: [
       { title: "School Clubs", description: "Termly crochet clubs hosted at your school." },
