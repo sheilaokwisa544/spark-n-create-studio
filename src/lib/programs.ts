@@ -2,7 +2,7 @@ import { Palette, Users, PartyPopper, GraduationCap, Scissors, Shirt, Sparkles }
 import type { LucideIcon } from "lucide-react";
 import { photos } from "@/lib/photos";
 import { crochetPhotos } from "@/lib/crochet-photos";
-import fashionDesignClub from "@/assets/fashion-design-club.jpg";
+import { fashionPhotos } from "@/lib/fashion-photos";
 import aiForTeens from "@/assets/ai-for-teens.jpg";
 
 export type Program = {
@@ -85,7 +85,7 @@ export const PROGRAMS: Program[] = [
     cta: "Explore Fashion Club",
     Icon: Shirt,
     color: "purple",
-    image: fashionDesignClub,
+    image: fashionPhotos.upcycledShirts,
     badge: "Design & Make",
     emoji: "✂️",
     hue: "from-brand-purple to-brand-orange",
